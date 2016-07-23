@@ -1,0 +1,27 @@
+E, [2016-07-20T12:09:06.221766 #10013] ERROR -- Kitchen: ------Exception-------
+E, [2016-07-20T12:09:06.221834 #10013] ERROR -- Kitchen: Class: Kitchen::UserError
+E, [2016-07-20T12:09:06.221859 #10013] ERROR -- Kitchen: Message: Kitchen YAML file /home/lotharkatt/kitchen/tests/.kitchen.yml does not exist.
+E, [2016-07-20T12:09:06.221879 #10013] ERROR -- Kitchen: ----------------------
+E, [2016-07-20T12:09:06.221895 #10013] ERROR -- Kitchen: ------Backtrace-------
+E, [2016-07-20T12:09:06.221910 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/test-kitchen-1.10.2/lib/kitchen/loader/yaml.rb:74:in `read'
+E, [2016-07-20T12:09:06.221926 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/test-kitchen-1.10.2/lib/kitchen/config.rb:154:in `data'
+E, [2016-07-20T12:09:06.221942 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/test-kitchen-1.10.2/lib/kitchen/config.rb:133:in `suites'
+E, [2016-07-20T12:09:06.221960 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/test-kitchen-1.10.2/lib/kitchen/config.rb:184:in `filter_instances'
+E, [2016-07-20T12:09:06.221976 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/test-kitchen-1.10.2/lib/kitchen/config.rb:143:in `build_instances'
+E, [2016-07-20T12:09:06.221991 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/test-kitchen-1.10.2/lib/kitchen/config.rb:119:in `instances'
+E, [2016-07-20T12:09:06.222013 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/test-kitchen-1.10.2/lib/kitchen/command.rb:115:in `filtered_instances'
+E, [2016-07-20T12:09:06.222029 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/test-kitchen-1.10.2/lib/kitchen/command.rb:145:in `parse_subcommand'
+E, [2016-07-20T12:09:06.222044 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/test-kitchen-1.10.2/lib/kitchen/command/list.rb:32:in `call'
+E, [2016-07-20T12:09:06.222059 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/test-kitchen-1.10.2/lib/kitchen/cli.rb:56:in `perform'
+E, [2016-07-20T12:09:06.222074 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/test-kitchen-1.10.2/lib/kitchen/cli.rb:120:in `list'
+E, [2016-07-20T12:09:06.222089 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/thor-0.19.1/lib/thor/command.rb:27:in `run'
+E, [2016-07-20T12:09:06.222106 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/thor-0.19.1/lib/thor/invocation.rb:126:in `invoke_command'
+E, [2016-07-20T12:09:06.222133 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/test-kitchen-1.10.2/lib/kitchen/cli.rb:325:in `invoke_task'
+E, [2016-07-20T12:09:06.222157 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/thor-0.19.1/lib/thor.rb:359:in `dispatch'
+E, [2016-07-20T12:09:06.222174 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/thor-0.19.1/lib/thor/base.rb:440:in `start'
+E, [2016-07-20T12:09:06.222189 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/test-kitchen-1.10.2/bin/kitchen:13:in `block in <top (required)>'
+E, [2016-07-20T12:09:06.222204 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/test-kitchen-1.10.2/lib/kitchen/errors.rb:174:in `with_friendly_errors'
+E, [2016-07-20T12:09:06.222218 #10013] ERROR -- Kitchen: /var/lib/gems/2.3.0/gems/test-kitchen-1.10.2/bin/kitchen:13:in `<top (required)>'
+E, [2016-07-20T12:09:06.222234 #10013] ERROR -- Kitchen: /usr/local/bin/kitchen:23:in `load'
+E, [2016-07-20T12:09:06.222253 #10013] ERROR -- Kitchen: /usr/local/bin/kitchen:23:in `<main>'
+E, [2016-07-20T12:09:06.222267 #10013] ERROR -- Kitchen: ----End Backtrace-----
