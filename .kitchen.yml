@@ -7,25 +7,28 @@ provisioner:
 
 platforms:
   - name: ubuntu-14.04
+    driver:
+      name: docker
+      volume:
+        - <%= ENV['PWD'] %>:/tmp/kitchen
+      #provision_command:
+      #  - apt-get update
+
 #  - name: ubuntu-16.04
  ## Finally add support to RHEL platforms
  #- name: centos-7.0
 
+
+verifier:
+  name: inspec
+  sudo: true
+
 suites:
 
  - name: master
-   provisioner:
-     script: tests/master-bootstrap.sh
-
-# - name: minion
-#  provisioner:
-#    script: tests/minion-bootstrap.sh
-
- ## ONCE MERGED and TODO.md impemented
- #- name: default-master
    #provisioner:
-     #script: tests/bootstrap.sh master -e xxx.env -e zzz.env
+   #  script: tests/bootstrap.sh master
 
- #- name: default-minion
+ - name: minion
    #provisioner:
-     #script: tests/bootstrap.sh minion -e xxx.env -e zzz.env
+   #  script: tests/bootstrap.sh minion
