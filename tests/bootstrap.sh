@@ -4,6 +4,9 @@
 # ENVIRONMENT
 #
 
+
+
+
 OS_DISTRIBUTION=${OS_DISTRIBUTION:-ubuntu}
 OS_NETWORKING=${OS_NETWORKING:-opencontrail}
 OS_VERSION=${OS_VERSION:-kilo}
@@ -37,6 +40,9 @@ CONFIG_ADDRESS=${CONFIG_ADDRESS:-10.10.10.200}
 MINION_MASTER=${MINION_MASTER:-$CONFIG_ADDRESS}
 MINION_HOSTNAME=${MINION_HOSTNAME:-minion}
 MINION_ID=${MINION_HOSTNAME}.${CONFIG_DOMAIN}
+
+
+
 
 install_salt_master_pkg()
 {
@@ -302,19 +308,65 @@ run_salt_states()
     salt-call --retcode-passthrough state.highstate --no-color
 }
 
-if [ "$SALT_SOURCE" == "pkg" ]; then
-    install_salt_master_pkg
-    install_salt_minion_pkg
-elif [ "$SALT_SOURCE" == "pip" ]; then
-    install_salt_master_pip
-    install_salt_minion_pip
-fi
 
-if [ "$FORMULA_SOURCE" == "pkg" ]; then
-    install_salt_formula_pkg
-elif [ "$FORMULA_SOURCE" == "git" ]; then
-     install_salt_formula_git
-fi
-run_salt_states
+function install_salt_master() {
+
+	if [ "$SALT_SOURCE" == "pkg" ]; then
+	    install_salt_master_pkg
+	    install_salt_minion_pkg
+	elif [ "$SALT_SOURCE" == "pip" ]; then
+	    install_salt_master_pip
+	    install_salt_minion_pip
+	fi
+	if [ "$FORMULA_SOURCE" == "pkg" ]; then
+	    install_salt_formula_pkg
+	elif [ "$FORMULA_SOURCE" == "git" ]; then
+	     install_salt_formula_git
+	fi
+}
+
+
+function install_salt_minion() {
+
+	if [ "$SALT_SOURCE" == "pkg" ]; then
+	    install_salt_minion_pkg
+	elif [ "$SALT_SOURCE" == "pip" ]; then
+	    install_salt_minion_pip
+	fi
+}
+
+
+
+
+
+
+
+# detect if file is being sourced
+# bash/korn shell compatible
+#[[ "$0" != "$_" ]] && main "$@"
+# bash way
+[[ "$0" == "$BASH_SOURCE" ]] && {
+
+	# cli
+	while [ "$1" != "" ]; do
+	    case $1 in
+		-mas | master )         
+			echo "master" 
+			install_salt_master
+			install_salt_minion
+			;;
+		-min | minion )         
+			echo "minion"
+			install_salt_minion
+
+			;;
+	    esac
+	    shift
+	done
+
+} || {
+	# source
+	echo "hovno"
+}
 
 
