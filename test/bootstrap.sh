@@ -142,8 +142,10 @@ pretty_print: True
 output: yaml
 inventory_base_uri: /srv/salt/reclass
 EOF
-    if [ ! -e /srv/salt/reclass ]; then
+    if [ ! -e /srv/salt/reclass/.git ]; then
       git clone ${RECLASS_ADDRESS} /srv/salt/reclass -b ${RECLASS_BRANCH}
+    else
+      git fetch ${RECLASS_ADDRESS} /srv/salt/reclass
     fi
     
     if [ ! -f "/srv/salt/reclass/nodes/${CONFIG_HOST}.yml" ]; then
