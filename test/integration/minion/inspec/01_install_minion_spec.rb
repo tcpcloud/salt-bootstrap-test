@@ -1,13 +1,36 @@
 
-describe file('/tmp/kitchen/test/bootstrap.sh') do
-  it { should exist }
+control '01' do
+  impact 0.5
+  title 'Verify bootstrap minion passes'
+  desc 'Check the bootstrap script and execute to bootstrap salt-master node'
+
+  describe file('/tmp/kitchen/test/bootstrap.sh') do
+    it { should exist }
+  end
+
+  describe command('CONFIG_MASTER=10.200.50.11 MINION_ID=kvm01.company.local /tmp/kitchen/test/bootstrap.sh minion') do
+    its('exit_status') { should eq 0 }
+  end
+
+  describe file('/etc/salt/minion.d/minion.conf') do
+    its('content') { should match('master: 10.200.50.11') }
+    its('content') { should match('idr: kvm01.company.local') }
+  end
+
 end
 
-describe command('/tmp/kitchen/test/bootstrap.sh minion') do
-  its('exit_status') { should eq 0 }
-end
 
-# consequent run should pass as well
-describe command('/tmp/kitchen/test/bootstrap.sh minion') do
-  its('exit_status') { should eq 0 }
+control 'Check consequent run' do
+  impact 0.5
+
+  # consequent run should pass as well
+  describe command('CONFIG_MASTER=10.200.50.12 MINION_HOSTNAME=kvm02 /tmp/kitchen/test/bootstrap.sh minion') do
+    its('exit_status') { should eq 0 }
+  end
+
+  describe file('/etc/salt/minion.d/minion.conf') do
+    its('content') { should match('master: 10.200.50.12') }
+    its('content') { should match('idr: kvm01.company.local') }
+  end
+
 end
