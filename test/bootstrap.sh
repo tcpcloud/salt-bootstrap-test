@@ -18,7 +18,7 @@ install_salt_master_pkg_apt()
 {
     echo -e "\nPreparing base OS repository ...\n"
 ####################### uprava repozitare
-    echo -e "$REPOSITORY main " > /etc/apt/sources.list
+    echo -e "$REPOSITORY_APT main " > /etc/apt/sources.list
     wget -O - $REPOSITORY_GPG | apt-key add -
 
     apt-get clean
@@ -49,7 +49,7 @@ install_salt_master_pip_apt()
 {
     echo -e "\nPreparing base OS repository ...\n"
 
-    echo -e "$REPOSITORY main" > /etc/apt/sources.list
+    echo -e "$REPOSITORY_APT main" > /etc/apt/sources.list
     wget -O - $REPOSITORY_GPG | apt-key add -
 
     apt-get clean
@@ -84,8 +84,52 @@ install_salt_master_pip_apt()
 }
 install_salt_master_pkg_yum()
 {
-  echo "salt master yum"
+  echo "salt master yum pkg"
   # WIP
+}
+
+install_salt_master_pip_yum()
+{
+  # WIP
+  echo -e "\nPreparing base OS repository ...\n"
+
+
+  ### edit repoooooooooooooooooooooooooooooos
+  echo -e "$REPOSITORY_APT main" > /etc/apt/sources.list
+  wget -O - $REPOSITORY_GPG | apt-key add -
+
+  yum clean
+  yum update
+
+  echo -e "\nInstalling salt master ...\n"
+
+  if [ -x "`which invoke-rc.d 2>/dev/null`" -a -x "/etc/init.d/salt-minion" ] ; then
+    yum remove -y salt-minion salt-common && yum autoremove -y
+  fi
+
+  yum install -y python-pip python-dev zlib1g-dev reclass git
+
+  if [ "$SALT_VERSION" == "latest" ]; then
+    pip install salt
+  else
+    pip install salt==$SALT_VERSION
+  fi
+#########FIX IT
+  wget -O /etc/init.d/salt-master https://anonscm.debian.org/cgit/pkg-salt/salt.git/plain/debian/salt-master.init && chmod 755 /etc/init.d/salt-master
+  ln -s /usr/local/bin/salt-master /usr/bin/salt-master
+
+  configure_salt_master
+
+  install_salt_minion_pkg_yum "master"
+
+  echo -e "\nRestarting services ...\n"
+  systemctl start salt-master.service
+
+  [ -f /etc/salt/pki/minion/minion_master.pub ] && rm -f /etc/salt/pki/minion/minion_master.pub
+  systemctl start salt-minion.service
+  salt-call pillar.data > /dev/null 2>&1
+
+  echo "salt master yum pip"
 }
 
 configure_salt_master()
@@ -213,11 +257,18 @@ install_salt_minion_pip_apt()
 
     service salt-minion restart
 }
+install_salt_minion_pip_yum()
+{
+  echo "salt minion yum pip"
+  # WIP
+}
+
+
 install_salt_minion_pkg_yum()
 {
     echo -e "\nPreparing base OS repository ...\n"
-
-    source /etc/os-release
+#    fix replace repository
+#    source /etc/os-release
     yum install -y https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el${VERSION_ID}.noarch.rpm
 
     yum clean all
@@ -245,7 +296,7 @@ install_salt_formula_pkg_apt()
     echo "Configuring necessary formulas ..."
     which wget > /dev/null || (apt-get update; apt-get install -y wget)
 
-    echo "$REPOSITORY tcp-salt" > /etc/apt/sources.list.d/salt-formulas.list
+    echo "$REPOSITORY_APT tcp-salt" > /etc/apt/sources.list.d/salt-formulas.list
     wget -O - "$REPOSITORY_GPG" | apt-key add -
 
     apt-get clean
