@@ -14,7 +14,7 @@ control '01' do
 
   describe file('/etc/salt/minion.d/minion.conf') do
     its('content') { should match('master: 10.200.50.11') }
-    its('content') { should match('idr: kvm01.company.local') }
+    its('content') { should match('id: kvm01.company.local') }
   end
 
 end
@@ -30,7 +30,7 @@ control 'Check consequent run' do
 
   describe file('/etc/salt/minion.d/minion.conf') do
     its('content') { should match('master: 10.200.50.12') }
-    its('content') { should match('idr: kvm01.company.local') }
+    its('content') { should match('id: kvm01.company.local') }
   end
 
 end

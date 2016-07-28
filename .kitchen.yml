@@ -1,7 +1,6 @@
 ---
 driver:
   name: docker
-
 provisioner:
   name: shell
 
@@ -25,7 +24,7 @@ verifier:
 
 suites:
 
- - name: master
+  # - name: master
    #provisioner:
    #  script: tests/bootstrap.sh master
 
