@@ -9,9 +9,9 @@ control 'salt-master service' do
   impact 0.5
   title 'Verify salt-master service'
   describe service('salt-master') do
-    it { should_not be_enabled }
-    it { should_not be_installed }
-    it { should_not be_running }
+    it { should be_enabled }
+    it { should be_installed }
+    it { should be_running }
   end
 end
 

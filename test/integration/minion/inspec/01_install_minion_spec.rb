@@ -9,7 +9,8 @@ control '01' do
   end
 
   describe command('source /tmp/kitchen/env/salt.env; CONFIG_MASTER=10.200.50.11 MINION_ID=kvm01.company.local /tmp/kitchen/bootstrap.sh minion') do
-    its('exit_status') { should eq 0 }
+    #its('exit_status') { should eq 0 }
+    its('stdout') { should match('DONE') }
   end
 
   describe file('/etc/salt/minion.d/minion.conf') do
@@ -26,6 +27,7 @@ control 'Check consequent run' do
   # consequent run should pass as well
   describe command('source /tmp/kitchen/env/salt.env; CONFIG_MASTER=10.200.50.12 MINION_HOSTNAME=kvm02 /tmp/kitchen/bootstrap.sh minion') do
     its('exit_status') { should eq 0 }
+    its('stdout') { should match('DONE') }
   end
 
   describe file('/etc/salt/minion.d/minion.conf') do

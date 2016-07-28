@@ -9,7 +9,8 @@ control '01' do
   end
 
   describe command('source /tmp/kitchen/env/salt.env; /tmp/kitchen/bootstrap.sh master') do
-    its('exit_status') { should eq 0 }
+    #its('exit_status') { should eq 0 }
+    its('stdout') { should match('DONE') }
   end
 end
 
@@ -18,7 +19,8 @@ control '02' do
   title 'Verify consequent execution of the bootstrap script'
   # consequent run should pass as well
   describe command('source /tmp/kitchen/env/salt.env; /tmp/kitchen/bootstrap.sh master') do
-    its('exit_status') { should eq 0 }
+    #its('exit_status') { should eq 0 }
+    its('stdout') { should match('DONE') }
   end
 end
 

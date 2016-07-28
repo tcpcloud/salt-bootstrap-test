@@ -1,8 +1,5 @@
 #!/bin/bash -e
 
-
-#set -x
-
 # ENVIRONMENT
 ####
 
@@ -341,7 +338,9 @@ install_salt_formula_git()
 # bash way
 [[ "$0" != "$BASH_SOURCE" ]] || {
 
-  test -e $(dirname $0)/env/salt.env && source $(dirname $0)/env/salt.env
+  # DEBUGING
+  #set -x
+  #test -e $(dirname $0)/env/salt.env && source $(dirname $0)/env/salt.env
 
   # CLI
   while [ x"$1" != x"" ]; do

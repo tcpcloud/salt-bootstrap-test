@@ -12,9 +12,9 @@ control 'salt-minion service' do
   impact 0.5
   title 'Verify minion service'
   describe service('salt-minion') do
-    it { should_not be_enabled }
-    it { should_not be_installed }
-    it { should_not be_running }
+    it { should be_enabled }
+    it { should be_installed }
+    it { should be_running }
   end
 end
 
