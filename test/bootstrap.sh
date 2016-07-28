@@ -93,7 +93,6 @@ install_salt_master_pip_yum()
   # WIP
   echo -e "\nPreparing base OS repository ...\n"
 
-
   ### edit repoooooooooooooooooooooooooooooos
   echo -e "$REPOSITORY_APT main" > /etc/apt/sources.list
   wget -O - $REPOSITORY_GPG | apt-key add -
@@ -347,7 +346,7 @@ install_salt_formula_pkg_yum()
 function install_salt_master() {
 
 	if [ "$SALT_SOURCE" == "pkg" ]; then
-	    install_salt_master_pkg_apt_apt
+	    install_salt_master_pkg_apt
 	    install_salt_minion_pkg_apt
 	elif [ "$SALT_SOURCE" == "pip" ]; then
 	    install_salt_master_pip_apt
