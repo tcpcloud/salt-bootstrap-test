@@ -140,8 +140,8 @@ parameters:
     reclass_data_repository: "$RECLASS_ADDRESS"
     reclass_data_revision: $RECLASS_BRANCH
     salt_formula_branch: $FORMULA_BRANCH
-    reclass_config_master: $CONFIG_ADDRESS
-    single_address: $CONFIG_ADDRESS
+    reclass_config_master: $MINION_MASTER
+    single_address: $MINION_MASTER
     salt_master_host: $SALT_MASTER_HOST
     salt_master_base_environment: $SALT_ENV
   linux:
