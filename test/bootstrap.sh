@@ -14,7 +14,7 @@ fi
 
 
 
-install_salt_master_pkg()
+install_salt_master_pkg_apt()
 {
     echo -e "\nPreparing base OS repository ...\n"
 ####################### uprava repozitare
@@ -36,7 +36,7 @@ install_salt_master_pkg()
 
     configure_salt_master
 
-    install_salt_minion_pkg "master"
+    install_salt_minion_pkg_apt "master"
 
     echo -e "\nRestarting services ...\n"
     service salt-master restart
@@ -45,7 +45,7 @@ install_salt_master_pkg()
     salt-call pillar.data > /dev/null 2>&1
 }
 
-install_salt_master_pip()
+install_salt_master_pip_apt()
 {
     echo -e "\nPreparing base OS repository ...\n"
 
@@ -74,7 +74,7 @@ install_salt_master_pip()
 
     configure_salt_master
 
-    install_salt_minion_pkg "master"
+    install_salt_minion_pkg_apt "master"
 
     echo -e "\nRestarting services ...\n"
     service salt-master restart
@@ -82,7 +82,7 @@ install_salt_master_pip()
     service salt-minion restart
     salt-call pillar.data > /dev/null 2>&1
 }
-install_salt_master_yum()
+install_salt_master_pkg_yum()
 {
   echo "salt master yum"
   # WIP
@@ -185,7 +185,7 @@ EOF
     service salt-master restart
 }
 
-install_salt_minion_pkg()
+install_salt_minion_pkg_apt()
 {
     echo -e "\nInstalling salt minion ...\n"
 
@@ -201,7 +201,7 @@ install_salt_minion_pkg()
     service salt-minion restart
 }
 
-install_salt_minion_pip()
+install_salt_minion_pip_apt()
 {
     echo -e "\nInstalling salt minion ...\n"
 
@@ -213,19 +213,40 @@ install_salt_minion_pip()
 
     service salt-minion restart
 }
-install_salt_minion_yum()
+install_salt_minion_pkg_yum()
 {
-  echo "salt minion yum"
-  # WIP
+    echo -e "\nPreparing base OS repository ...\n"
+
+    source /etc/os-release
+    yum install -y https://repo.saltstack.com/yum/redhat/salt-repo-latest-1.el${VERSION_ID}.noarch.rpm
+
+    yum clean all
+
+    echo -e "\nInstalling salt minion ...\n"
+
+    if [ "$SALT_VERSION" == "latest" ]; then
+        yum install -y salt-minion
+    else
+        yum install -y salt-minion-$SALT_VERSION
+    fi
+
+    echo -e "\nConfiguring salt minion ...\n"
+
+    [ ! -d /etc/salt/minion.d ] && mkdir -p /etc/salt/minion.d
+    echo -e "master: $MINION_MASTER\nid: $MINION_ID" > /etc/salt/minion.d/minion.conf
+
+    service salt-minion restart
+
+salt-call pillar.data > /dev/null 2>&1
 }
 
-install_salt_formula_pkg()
+install_salt_formula_pkg_apt()
 {
     echo "Configuring necessary formulas ..."
     which wget > /dev/null || (apt-get update; apt-get install -y wget)
 
-    echo "${REPOSITORY} tcp-salt" > /etc/apt/sources.list.d/salt-formulas.list
-    wget -O - "${REPOSITORY_GPG}" | apt-key add -
+    echo "$REPOSITORY tcp-salt" > /etc/apt/sources.list.d/salt-formulas.list
+    wget -O - "$REPOSITORY_GPG" | apt-key add -
 
     apt-get clean
     apt-get update
@@ -266,7 +287,7 @@ install_salt_formula_git()
     [ ! -d /srv/salt/env ] && mkdir -p /srv/salt/env
     [ ! -L /srv/salt/env/dev ] && ln -s /usr/share/salt-formulas/env /srv/salt/env/dev
 }
-install_salt_formula_yum()
+install_salt_formula_pkg_yum()
 {
     echo "salt formula yum"
     # WIP
@@ -275,14 +296,14 @@ install_salt_formula_yum()
 function install_salt_master() {
 
 	if [ "$SALT_SOURCE" == "pkg" ]; then
-	    install_salt_master_pkg
-	    install_salt_minion_pkg
+	    install_salt_master_pkg_apt_apt
+	    install_salt_minion_pkg_apt
 	elif [ "$SALT_SOURCE" == "pip" ]; then
-	    install_salt_master_pip
-	    install_salt_minion_pip
+	    install_salt_master_pip_apt
+	    install_salt_minion_pip_apt
 	fi
 	if [ "$FORMULA_SOURCE" == "pkg" ]; then
-	    install_salt_formula_pkg
+	    install_salt_formula_pkg_apt
 	elif [ "$FORMULA_SOURCE" == "git" ]; then
 	     install_salt_formula_git
 	fi
@@ -291,9 +312,9 @@ function install_salt_master() {
 function install_salt_minion() {
 
 	if [ "$SALT_SOURCE" == "pkg" ]; then
-	    install_salt_minion_pkg
+	    install_salt_minion_pkg_apt
 	elif [ "$SALT_SOURCE" == "pip" ]; then
-	    install_salt_minion_pip
+	    install_salt_minion_pip_apt
 	fi
 }
 
@@ -321,5 +342,5 @@ function install_salt_minion() {
 
 } || {
 	# source
-	echo "hovno"
+	echo "source"
 }
