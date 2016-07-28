@@ -4,11 +4,11 @@ control '01' do
   title 'Verify bootstrap minion passes'
   desc 'Check the bootstrap script and execute to bootstrap salt-master node'
 
-  describe file('/tmp/kitchen/test/bootstrap.sh') do
+  describe file('/tmp/kitchen/bootstrap.sh') do
     it { should exist }
   end
 
-  describe command('CONFIG_MASTER=10.200.50.11 MINION_ID=kvm01.company.local /tmp/kitchen/test/bootstrap.sh minion') do
+  describe command('source /tmp/kitchen/env/salt.env; CONFIG_MASTER=10.200.50.11 MINION_ID=kvm01.company.local /tmp/kitchen/bootstrap.sh minion') do
     its('exit_status') { should eq 0 }
   end
 
@@ -24,7 +24,7 @@ control 'Check consequent run' do
   impact 0.5
 
   # consequent run should pass as well
-  describe command('CONFIG_MASTER=10.200.50.12 MINION_HOSTNAME=kvm02 /tmp/kitchen/test/bootstrap.sh minion') do
+  describe command('source /tmp/kitchen/env/salt.env; CONFIG_MASTER=10.200.50.12 MINION_HOSTNAME=kvm02 /tmp/kitchen/bootstrap.sh minion') do
     its('exit_status') { should eq 0 }
   end
 

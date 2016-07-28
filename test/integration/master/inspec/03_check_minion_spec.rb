@@ -1,5 +1,9 @@
 
 
+only_if do
+  not file('/.dockerenv').exist?
+end
+
 # TODO: do not run those tests on docker yet
 return if ENV['DOCKER']
 return unless os.linux?
