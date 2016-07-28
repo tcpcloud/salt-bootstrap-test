@@ -12,16 +12,6 @@ elif [ "$FORMULA_SOURCE" == "pkg" ]; then
   SALT_ENV="prd"
 fi
 
-RECLASS_ADDRESS=${RECLASS_ADDRESS:-https://github.com/tcpcloud/openstack-salt-model.git}
-RECLASS_BRANCH=${RECLASS_BRANCH:-master}
-RECLASS_SYSTEM=${RECLASS_SYSTEM:-$OS_SYSTEM}
-
-CONFIG_HOST=${CONFIG_HOSTNAME}.${CONFIG_DOMAIN}
-
-MINION_MASTER=${MINION_MASTER:-$CONFIG_ADDRESS}
-MINION_HOSTNAME=${MINION_HOSTNAME:-minion}
-MINION_ID=${MINION_HOSTNAME}.${CONFIG_DOMAIN}
-
 
 
 install_salt_master_pkg()
@@ -91,6 +81,11 @@ install_salt_master_pip()
     [ -f /etc/salt/pki/minion/minion_master.pub ] && rm -f /etc/salt/pki/minion/minion_master.pub
     service salt-minion restart
     salt-call pillar.data > /dev/null 2>&1
+}
+install_salt_master_yum()
+{
+  echo "salt master yum"
+  # WIP
 }
 
 configure_salt_master()
@@ -218,6 +213,11 @@ install_salt_minion_pip()
 
     service salt-minion restart
 }
+install_salt_minion_yum()
+{
+  echo "salt minion yum"
+  # WIP
+}
 
 install_salt_formula_pkg()
 {
@@ -265,6 +265,11 @@ install_salt_formula_git()
 
     [ ! -d /srv/salt/env ] && mkdir -p /srv/salt/env
     [ ! -L /srv/salt/env/dev ] && ln -s /usr/share/salt-formulas/env /srv/salt/env/dev
+}
+install_salt_formula_yum()
+{
+    echo "salt formula yum"
+    # WIP
 }
 
 function install_salt_master() {

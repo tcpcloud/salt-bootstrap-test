@@ -24,7 +24,7 @@ verifier:
 
 suites:
 
-  # - name: master
+ - name: master
    #provisioner:
    #  script: tests/bootstrap.sh master
 
