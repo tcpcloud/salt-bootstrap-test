@@ -57,9 +57,6 @@ configure_pkg_repo()
         ;;
     esac
 
-exit 0
-
-
 }
 
 # DEPRECATED
