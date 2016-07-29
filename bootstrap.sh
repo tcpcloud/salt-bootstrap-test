@@ -6,7 +6,7 @@
 # repository
 export APT_REPOSITORY_URL=${APT_REPOSITORY_URL:-http://apt.tcpcloud.eu/}
 export APT_REPOSITORY_GPG=${APT_REPOSITORY_GPG:-http://apt.tcpcloud.eu/public.gpg}
-export APT_REPOSITORY_TAGS=${APT_REPOSITORY_TAGS:-main extra tcp-salt}
+export APT_REPOSITORY_TAGS=${APT_REPOSITORY_TAGS:-main extra tcp tcp-salt}
 export APT_REPOSITORY="deb [arch=amd64] ${APT_REPOSITORY_URL}${APT_REPOSITORY_BRANCH:-nightly} ${APT_REPOSITORY_CODENM:-$(lsb_release -cs)} ${APT_REPOSITORY_TAGS:-main}"
 
 # reclass
@@ -314,7 +314,7 @@ install_salt_formula_pkg()
 
           [ ! -d /srv/salt/reclass/classes/service ] && mkdir -p /srv/salt/reclass/classes/service
 
-          declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git")
+          declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx")
 
           for formula_service in "${formula_services[@]}"; do
               echo -e "\nConfiguring salt formula ${formula_service} ...\n"
