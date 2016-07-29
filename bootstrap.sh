@@ -3,6 +3,7 @@
 # ENVIRONMENT
 ####
 
+
 SUDO=${SUDO:-sudo}
 
 SALT_SOURCE=${SALT_SOURCE:-pkg}
@@ -55,22 +56,26 @@ configure_pkg_repo()
           $SUDO yum clean all
         ;;
     esac
+
+exit 0
+
+
 }
 
 # DEPRECATED
-purge_system()
-{
+#purge_system()
+#{
 
-  # debian
-  if [ -x "`which invoke-rc.d 2>/dev/null`" -a -x "/etc/init.d/salt-minion" ] ; then
-    $SUDO apt-get purge -y salt-minion salt-common && $SUDO apt-get autoremove -y
-  fi
+  ## debian
+  #if [ -x "`which invoke-rc.d 2>/dev/null`" -a -x "/etc/init.d/salt-minion" ] ; then
+    #$SUDO apt-get purge -y salt-minion salt-common && $SUDO apt-get autoremove -y
+  #fi
 
-  # rhel
-  if [ -x "`which invoke-rc.d 2>/dev/null`" -a -x "/etc/init.d/salt-minion" ] ; then
-    $SUDO yum remove -y salt-minion salt-common && $SUDO yum autoremove -y
-  fi
-}
+  ## rhel
+  #if [ -x "`which invoke-rc.d 2>/dev/null`" -a -x "/etc/init.d/salt-minion" ] ; then
+    #$SUDO yum remove -y salt-minion salt-common && $SUDO yum autoremove -y
+  #fi
+#}
 
 configure_salt_master()
 {
@@ -340,7 +345,8 @@ install_salt_formula_git()
 
   # DEBUGING
   #set -x
-  #test -e $(dirname $0)/env/salt.env && source $(dirname $0)/env/salt.env
+  test -e $(dirname $0)/env/salt.env && source $(dirname $0)/env/salt.env
+  #set
 
   # CLI
   while [ x"$1" != x"" ]; do
