@@ -1,5 +1,32 @@
 #!/bin/bash -e
 
+# DEAULTS
+####
+
+# repository
+export APT_REPOSITORY_URL=${APT_REPOSITORY_URL:-http://apt.tcpcloud.eu/}
+export APT_REPOSITORY_GPG=${APT_REPOSITORY_GPG:-http://apt.tcpcloud.eu/public.gpg}
+export APT_REPOSITORY_TAGS=${APT_REPOSITORY_TAGS:-main extra tcp-salt}
+export APT_REPOSITORY="deb [arch=amd64] ${APT_REPOSITORY_URL}${APT_REPOSITORY_BRANCH:-nightly} ${APT_REPOSITORY_CODENM:-$(lsb_release -cs)} ${APT_REPOSITORY_TAGS:-main}"
+
+# reclass
+export RECLASS_ADDRESS=${RECLASS_ADDRESS:-https://github.com/tcpcloud/openstack-salt-model.git} # https/git
+
+# formula
+export FORMULA_SOURCE=${FORMULA_SOURCE:-pkg} # pkg/git
+export FORMULA_PATH=${FORMULA_PATH:-/usr/share/salt-formulas}
+export FORMULA_GIT_BRANCH=${FORMULA_GIT_BRANCH:-master}
+export FORMULA_GIT_BASE_URL=${FORMULA_GIT_BASE_URL:-https://github.com/tcpcloud}
+
+# system / host
+export HOSTNAME=${HOSTNME:-cfg01}
+export DOMAIN=${DOMAIN:-company.local}
+
+# salt
+export SALT_MASTER=${SALT_MASTER:-192.168.0.4} # ip or fqdn
+export MINION_ID=${MINION_ID:-${HOSTNAME}.${DOMAIN}}
+
+
 # ENVIRONMENT
 ####
 
@@ -342,7 +369,7 @@ install_salt_formula_git()
 
   # DEBUGING
   #set -x
-  test -e $(dirname $0)/env/salt.env && source $(dirname $0)/env/salt.env
+  #test -e $(dirname $0)/env/salt.env && source $(dirname $0)/env/salt.env
   #set
 
   # CLI
