@@ -9,8 +9,7 @@ control '01' do
   end
 
   describe command('bash -c "source /tmp/kitchen/env/salt.env; SALT_MASTER=10.200.50.11 MINION_ID=kvm01.company.local /tmp/kitchen/bootstrap.sh minion"') do
-    #its('exit_status') { should eq 0 }
-    its('stdout') { should match('DONE') }
+    its('exit_status') { should eq 0 }
   end
 
   describe file('/etc/salt/minion.d/minion.conf') do
@@ -27,7 +26,6 @@ control 'Check consequent run' do
   # consequent run should pass as well
   describe command('bash -c "source /tmp/kitchen/env/salt.env; SALT_MASTER=10.200.50.12 MINION_ID=kvm02.company.local /tmp/kitchen/bootstrap.sh minion"') do
     its('exit_status') { should eq 0 }
-    its('stdout') { should match('DONE') }
   end
 
   describe file('/etc/salt/minion.d/minion.conf') do

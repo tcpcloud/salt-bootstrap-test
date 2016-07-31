@@ -73,7 +73,7 @@ configure_pkg_repo()
 
     case $PLATFORM_FAMILY in
       debian)
-          echo -e  "$APT_REPOSITORY " > /etc/apt/sources.list
+          echo -e  "$APT_REPOSITORY " | $SUDO tee /etc/apt/sources.list >/dev/null
           wget -O - $APT_REPOSITORY_GPG | apt-key add -
           $SUDO apt-get clean
           $SUDO apt-get update
@@ -107,29 +107,29 @@ configure_salt_master()
   echo "Configuring salt-master ..."
 
   [ ! -d /etc/salt/master.d ] && mkdir -p /etc/salt/master.d
-  cat <<-'EOF' > /etc/salt/master.d/master.conf
-    file_roots:
-      base:
-      - /usr/share/salt-formulas/env
-    pillar_opts: False
-    open_mode: True
-    reclass: &reclass
-      storage_type: yaml_fs
-      inventory_base_uri: /srv/salt/reclass
-    ext_pillar:
-      - reclass: *reclass
-    master_tops:
-      reclass: *reclass
+  cat <<-EOF > /etc/salt/master.d/master.conf
+  file_roots:
+    base:
+    - /usr/share/salt-formulas/env
+  pillar_opts: False
+  open_mode: True
+  reclass: &reclass
+    storage_type: yaml_fs
+    inventory_base_uri: /srv/salt/reclass
+  ext_pillar:
+    - reclass: *reclass
+  master_tops:
+    reclass: *reclass
 EOF
 
   echo "Configuring reclass ..."
 
   [ ! -d /etc/reclass ] && mkdir /etc/reclass
-  cat <<-'EOF' > /etc/reclass/reclass-config.yml
-    storage_type: yaml_fs
-    pretty_print: True
-    output: yaml
-    inventory_base_uri: /srv/salt/reclass
+  cat <<-EOF > /etc/reclass/reclass-config.yml
+  storage_type: yaml_fs
+  pretty_print: True
+  output: yaml
+  inventory_base_uri: /srv/salt/reclass
 EOF
 
   if [ ! -e /srv/salt/reclass/.git ]; then
@@ -185,12 +185,11 @@ EOF
 
 configure_salt_minion()
 {
-    [ ! -d /etc/salt/minion.d ] && mkdir -p /etc/salt/minion.d
-    cat <<-EOF > /etc/salt/minion.d/minion.conf
-    master: $SALT_MASTER
-    id: $MINION_ID
-EOF
-
+  [ ! -d /etc/salt/minion.d ] && mkdir -p /etc/salt/minion.d
+  cat <<-EOF > /etc/salt/minion.d/minion.conf
+	master: $SALT_MASTER
+	id: $MINION_ID
+	EOF
 }
 
 
@@ -315,7 +314,6 @@ install_salt_formula_pkg()
           [ ! -d /srv/salt/reclass/classes/service ] && mkdir -p /srv/salt/reclass/classes/service
 
           declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx")
-
           for formula_service in "${formula_services[@]}"; do
               echo -e "\nConfiguring salt formula ${formula_service} ...\n"
               [ ! -d "${FORMULA_PATH}/env/${formula_service}" ] && \
