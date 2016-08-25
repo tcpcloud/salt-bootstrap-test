@@ -73,8 +73,13 @@ configure_pkg_repo()
 
     case $PLATFORM_FAMILY in
       debian)
-          echo -e  "$APT_REPOSITORY " | $SUDO tee /etc/apt/sources.list >/dev/null
-          wget -O - $APT_REPOSITORY_GPG | apt-key add -
+          if [ -n "$APT_REPOSITORY_PPA" ]; then
+            which add-apt-repository || $SUDO apt-get install -y software-properties-common
+            $SUDO add-apt-repository -y ppa:${APT_REPOSITORY_PPA}
+          else
+            echo -e  "$APT_REPOSITORY " | $SUDO tee /etc/apt/sources.list >/dev/null
+            wget -O - $APT_REPOSITORY_GPG | $SUDO apt-key add -
+          fi
           $SUDO apt-get clean
           $SUDO apt-get update
         ;;
