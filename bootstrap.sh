@@ -19,7 +19,7 @@ export FORMULA_GIT_BRANCH=${FORMULA_GIT_BRANCH:-master}
 export FORMULA_GIT_BASE_URL=${FORMULA_GIT_BASE_URL:-https://github.com/tcpcloud}
 
 # system / host
-export HOSTNAME=${HOSTNME:-cfg01}
+export HOSTNAME=${HOSTNAME:-cfg01}
 export DOMAIN=${DOMAIN:-company.local}
 
 # salt
