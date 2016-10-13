@@ -73,8 +73,13 @@ configure_pkg_repo()
 
     case $PLATFORM_FAMILY in
       debian)
-          echo -e  "$APT_REPOSITORY " | $SUDO tee /etc/apt/sources.list >/dev/null
-          wget -O - $APT_REPOSITORY_GPG | apt-key add -
+          if [ -n "$APT_REPOSITORY_PPA" ]; then
+            which add-apt-repository || $SUDO apt-get install -y software-properties-common
+            $SUDO add-apt-repository -y ppa:${APT_REPOSITORY_PPA}
+          else
+            echo -e  "$APT_REPOSITORY " | $SUDO tee /etc/apt/sources.list >/dev/null
+            wget -O - $APT_REPOSITORY_GPG | $SUDO apt-key add -
+          fi
           $SUDO apt-get clean
           $SUDO apt-get update
         ;;
@@ -132,10 +137,15 @@ EOF
   inventory_base_uri: /srv/salt/reclass
 EOF
 
-  if [ ! -e /srv/salt/reclass/.git ]; then
+  if [ ! -d /srv/salt/reclass/classes ]; then
+    # No reclass at all, clone from given address
     git clone ${RECLASS_ADDRESS} /srv/salt/reclass -b ${RECLASS_BRANCH:-master}
+  elif [ -d /srv/salt/reclass/.git ]; then
+    # Already have reclass from Git, just update
+    git fetch /srv/salt/reclass
   else
-    git fetch /srv/salt/reclass 
+    # There's already some reclass structure, not from Git, use that as is
+    true
   fi
 
   [[ -f "/srv/salt/reclass/nodes/${MINION_ID}.yml" ]] || {
