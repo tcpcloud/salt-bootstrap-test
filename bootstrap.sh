@@ -113,28 +113,28 @@ configure_salt_master()
 
   [ ! -d /etc/salt/master.d ] && mkdir -p /etc/salt/master.d
   cat <<-EOF > /etc/salt/master.d/master.conf
-  file_roots:
-    base:
-    - /usr/share/salt-formulas/env
-  pillar_opts: False
-  open_mode: True
-  reclass: &reclass
-    storage_type: yaml_fs
-    inventory_base_uri: /srv/salt/reclass
-  ext_pillar:
-    - reclass: *reclass
-  master_tops:
-    reclass: *reclass
+	file_roots:
+	  base:
+	  - /usr/share/salt-formulas/env
+	pillar_opts: False
+	open_mode: True
+	reclass: &reclass
+	  storage_type: yaml_fs
+	  inventory_base_uri: /srv/salt/reclass
+	ext_pillar:
+	  - reclass: *reclass
+	master_tops:
+	  reclass: *reclass
 EOF
 
   echo "Configuring reclass ..."
 
   [ ! -d /etc/reclass ] && mkdir /etc/reclass
   cat <<-EOF > /etc/reclass/reclass-config.yml
-  storage_type: yaml_fs
-  pretty_print: True
-  output: yaml
-  inventory_base_uri: /srv/salt/reclass
+	storage_type: yaml_fs
+	pretty_print: True
+	output: yaml
+	inventory_base_uri: /srv/salt/reclass
 EOF
 
   if [ ! -d /srv/salt/reclass/classes ]; then
@@ -149,27 +149,27 @@ EOF
   fi
 
   [[ -f "/srv/salt/reclass/nodes/${MINION_ID}.yml" ]] || {
-    cat <<-EOF > /srv/salt/reclass/nodes/${MINION_ID}.yml
-    classes:
-    - service.git.client
-    - system.linux.system.single
-    - system.openssh.client.workshop
-    - system.salt.master.single
-    - system.salt.master.formula.$FORMULA_SOURCE
-    - system.reclass.storage.salt
-    parameters:
-      _param:
-        reclass_data_repository: "$RECLASS_ADDRESS"
-        reclass_data_revision: ${RECLASS_BRANCH:-master}
-        salt_formula_branch: ${FORMULA_GIT_BRANCH:-master}
-        reclass_config_master: $SALT_MASTER
-        single_address: $SALT_MASTER
-        salt_master_host: $SALT_MASTER
-        salt_master_base_environment: $SALT_ENV
-      linux:
-        system:
-          name: $MINION_ID
-          domain: $DOMAIN
+  cat <<-EOF > /srv/salt/reclass/nodes/${MINION_ID}.yml
+	classes:
+	- service.git.client
+	- system.linux.system.single
+	- system.openssh.client.workshop
+	- system.salt.master.single
+	- system.salt.master.formula.$FORMULA_SOURCE
+	- system.reclass.storage.salt
+	parameters:
+	  _param:
+	    reclass_data_repository: "$RECLASS_ADDRESS"
+	    reclass_data_revision: ${RECLASS_BRANCH:-master}
+	    salt_formula_branch: ${FORMULA_GIT_BRANCH:-master}
+	    reclass_config_master: $SALT_MASTER
+	    single_address: $SALT_MASTER
+	    salt_master_host: $SALT_MASTER
+	    salt_master_base_environment: $SALT_ENV
+	  linux:
+	    system:
+	      name: $MINION_ID
+	      domain: $DOMAIN
 EOF
 
     if [ "$SALT_VERSION" == "latest" ]; then
@@ -179,16 +179,16 @@ EOF
     fi
 
     cat <<-EOF >> /srv/salt/reclass/nodes/${MINION_ID}.yml
-    salt:
-      master:
-        accept_policy: open_mode
-        source:
-          engine: $SALT_SOURCE
-          $VERSION
-      minion:
-        source:
-          engine: $SALT_SOURCE
-          $VERSION
+		salt:
+		  master:
+		    accept_policy: open_mode
+		    source:
+		      engine: $SALT_SOURCE
+		      $VERSION
+		  minion:
+		    source:
+		      engine: $SALT_SOURCE
+		      $VERSION
 EOF
   }
 }
