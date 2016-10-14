@@ -18,7 +18,7 @@ Bootstrap master:
     export SALT_MASTER=172.16.178.10
     export DOMAIN=mosqa.cloud
     export APT_REPOSITORY_TAGS="main extra tcp-salt"
-	EOF
+  EOF
 ```
 
 	source *.env
