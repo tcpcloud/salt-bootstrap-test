@@ -77,7 +77,7 @@ configure_pkg_repo()
             which add-apt-repository || $SUDO apt-get install -y software-properties-common
             $SUDO add-apt-repository -y ppa:${APT_REPOSITORY_PPA}
           else
-            echo -e  "$APT_REPOSITORY " | $SUDO tee /etc/apt/sources.list >/dev/null
+            echo -e  "$APT_REPOSITORY " | $SUDO tee /etc/apt/sources.list.d/bootstrap.list >/dev/null
             wget -O - $APT_REPOSITORY_GPG | $SUDO apt-key add -
           fi
           $SUDO apt-get clean
@@ -337,8 +337,8 @@ install_salt_formula_pkg()
       ;;
     esac
 
-    [ ! -d /srv/salt/env ] && mkdir -p /srv/salt/env
-    [ ! -L /srv/salt/env/prd ] && ln -s ${FORMULA_PATH}/env /srv/salt/env/prd
+    [ ! -d /srv/salt/env ] && mkdir -p /srv/salt/env || echo ""
+    [ ! -L /srv/salt/env/prd ] && ln -s ${FORMULA_PATH}/env /srv/salt/env/prd || echo ""
 }
 
 install_salt_formula_git()
@@ -358,8 +358,8 @@ install_salt_formula_git()
             ln -s ${FORMULA_PATH}/env/_formulas/${formula_service}/metadata/service /srv/salt/reclass/classes/service/${formula_service}
     done
 
-    [ ! -d /srv/salt/env ] && mkdir -p /srv/salt/env
-    [ ! -L /srv/salt/env/dev ] && ln -s /usr/share/salt-formulas/env /srv/salt/env/dev
+    [ ! -d /srv/salt/env ] && mkdir -p /srv/salt/env || echo ""
+    [ ! -L /srv/salt/env/dev ] && ln -s /usr/share/salt-formulas/env /srv/salt/env/dev || echo ""
 }
 
 
