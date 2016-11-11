@@ -116,6 +116,10 @@ configure_salt_master()
 	file_roots:
 	  base:
 	  - /usr/share/salt-formulas/env
+	  prd:
+	  - /usr/salt/env/prd
+	  dev:
+	  - /usr/salt/env/dev
 	pillar_opts: False
 	open_mode: True
 	reclass: &reclass
