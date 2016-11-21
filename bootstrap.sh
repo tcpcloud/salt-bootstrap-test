@@ -327,7 +327,7 @@ install_salt_formula_pkg()
 
           [ ! -d /srv/salt/reclass/classes/service ] && mkdir -p /srv/salt/reclass/classes/service
 
-          declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx" "libvirt")
+          declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx" "keystone" "mysql" "grafana" "libvirt")
           for formula_service in "${formula_services[@]}"; do
               echo -e "\nConfiguring salt formula ${formula_service} ...\n"
               [ ! -d "${FORMULA_PATH}/env/${formula_service}" ] && \
@@ -351,11 +351,22 @@ install_salt_formula_git()
 
     [ ! -d /srv/salt/reclass/classes/service ] && mkdir -p /srv/salt/reclass/classes/service
 
-    declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx" "libvirt")
+    declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx" "keystone" "mysql" "grafana" "libvirt")
     for formula_service in "${formula_services[@]}"; do
         echo -e "\nConfiguring salt formula ${formula_service} ...\n"
-        [ ! -d "${FORMULA_PATH}/env/_formulas/${formula_service}" ] && \
-            git clone ${FORMULA_GIT_BASE_URL}/salt-formula-${formula_service}.git ${FORMULA_PATH}/env/_formulas/${formula_service} -b ${FORMULA_BRANCH:-master}
+        [ ! -d "${FORMULA_PATH}/env/_formulas/${formula_service}" ] && {
+            _BRANCH=$FORMULA_BRANCH
+            if ! git ls-remote --exit-code --heads ${FORMULA_GIT_BASE_URL}/salt-formula-${formula_service}.git ${_BRANCH}; then
+              # Fallback to the master branch if the branch doesn't exist for this repository
+              _BRANCH=master
+            fi
+            git clone ${FORMULA_GIT_BASE_URL}/salt-formula-${formula_service}.git ${FORMULA_PATH}/env/_formulas/${formula_service} -b ${_BRANCH}
+          } || {
+            cd ${FORMULA_PATH}/env/_formulas/${formula_service};
+            git fetch origin/${_BRANCH} || git fetch --all
+            git checkout ${_BRANCH} && git pull || git pull;
+            cd -
+        }
         [ ! -L "/usr/share/salt-formulas/env/${formula_service}" ] && \
             ln -s ${FORMULA_PATH}/env/_formulas/${formula_service}/${formula_service} /usr/share/salt-formulas/env/${formula_service}
         [ ! -L "/srv/salt/reclass/classes/service/${formula_service}" ] && \
