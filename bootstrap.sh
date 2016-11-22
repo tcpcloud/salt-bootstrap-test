@@ -354,8 +354,8 @@ install_salt_formula_git()
     declare -a formula_services=("linux" "reclass" "salt" "openssh" "ntp" "git" "nginx" "collectd" "sensu" "heka" "sphinx" "mysql" "grafana" "libvirt")
     for formula_service in "${formula_services[@]}"; do
         echo -e "\nConfiguring salt formula ${formula_service} ...\n"
+        _BRANCH=${FORMULA_BRANCH}
         [ ! -d "${FORMULA_PATH}/env/_formulas/${formula_service}" ] && {
-            _BRANCH=$FORMULA_BRANCH
             if ! git ls-remote --exit-code --heads ${FORMULA_GIT_BASE_URL}/salt-formula-${formula_service}.git ${_BRANCH}; then
               # Fallback to the master branch if the branch doesn't exist for this repository
               _BRANCH=master
