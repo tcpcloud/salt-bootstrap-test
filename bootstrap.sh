@@ -152,6 +152,7 @@ EOF
     true
   fi
 
+  mkdir -p /srv/salt/reclass/nodes
   [[ -f "/srv/salt/reclass/nodes/${MINION_ID}.yml" ]] || {
   cat <<-EOF > /srv/salt/reclass/nodes/${MINION_ID}.yml
 	classes:
