@@ -151,8 +151,10 @@ EOF
     # There's already some reclass structure, not from Git, use that as is
     true
   fi
-
-  mkdir -p /srv/salt/reclass/nodes
+ 
+  ls -lR /srv/salt
+  mkdir -vp /srv/salt/reclass/nodes
+  echo /srv/salt/reclass/nodes/${MINION_ID}.yml
   [[ -f "/srv/salt/reclass/nodes/${MINION_ID}.yml" ]] || {
   cat <<-EOF > /srv/salt/reclass/nodes/${MINION_ID}.yml
 	classes:
