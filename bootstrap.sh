@@ -160,7 +160,7 @@ EOF
 	classes:
 	- service.git.client
 	- system.linux.system.single
-	- system.openssh.client.workshop
+	- system.openssh.client.lab
 	- system.salt.master.single
 	- system.salt.master.formula.$FORMULA_SOURCE
 	- system.reclass.storage.salt
