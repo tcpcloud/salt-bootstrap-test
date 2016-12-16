@@ -146,7 +146,7 @@ EOF
     git clone ${RECLASS_ADDRESS} /srv/salt/reclass -b ${RECLASS_BRANCH:-master}
   elif [ -d /srv/salt/reclass/.git ]; then
     # Already have reclass from Git, just update
-    git fetch /srv/salt/reclass
+    cd /srv/salt/reclass; git fetch; cd -
   else
     # There's already some reclass structure, not from Git, use that as is
     true
