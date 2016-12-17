@@ -141,21 +141,16 @@ EOF
 	inventory_base_uri: /srv/salt/reclass
 EOF
 
-  if [ ! -d /srv/salt/reclass/classes ]; then
+  if [ ! -d /srv/salt/reclass ]; then
     # No reclass at all, clone from given address
     git clone ${RECLASS_ADDRESS} /srv/salt/reclass -b ${RECLASS_BRANCH:-master}
-  elif [ -d /srv/salt/reclass/.git ]; then
-    # Already have reclass from Git, just update
-    # cd /srv/salt/reclass; git fetch; cd -
-    true
-  else
-    # There's already some reclass structure, not from Git, use that as is
-    true
+  fi;
+  if [ ! -d /srv/salt/reclass/classes/linux ]; then
+    # Possibly subrepo checkout needed
+    git submodule update --init --recursive
   fi
  
-  ls -lR /srv/salt
   mkdir -vp /srv/salt/reclass/nodes
-  echo /srv/salt/reclass/nodes/${MINION_ID}.yml
   [[ -f "/srv/salt/reclass/nodes/${MINION_ID}.yml" ]] || {
   cat <<-EOF > /srv/salt/reclass/nodes/${MINION_ID}.yml
 	classes:
