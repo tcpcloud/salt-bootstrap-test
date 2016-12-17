@@ -20,10 +20,10 @@ export FORMULA_GIT_BASE_URL=${FORMULA_GIT_BASE_URL:-https://github.com/tcpcloud}
 
 # system / host
 export HOSTNAME=${HOSTNAME:-cfg01}
-export DOMAIN=${DOMAIN:-company.local}
+export DOMAIN=${DOMAIN:-bootstrap.local}
 
 # salt
-export SALT_MASTER=${SALT_MASTER:-192.168.0.4} # ip or fqdn
+export SALT_MASTER=${SALT_MASTER:-127.0.0.1} # ip or fqdn
 export MINION_ID=${MINION_ID:-${HOSTNAME}.${DOMAIN}}
 
 
@@ -145,14 +145,19 @@ EOF
     # No reclass at all, clone from given address
     git clone ${RECLASS_ADDRESS} /srv/salt/reclass -b ${RECLASS_BRANCH:-master}
   fi;
-  if [ ! -d /srv/salt/reclass/classes/linux ]; then
+  cd /srv/salt/reclass
+  if [ ! -d /srv/salt/reclass/classes/system/linux ]; then
     # Possibly subrepo checkout needed
     git submodule update --init --recursive
   fi
- 
+
+  #sed -ie "s#\(reclass_data_revision.\).*#\1 $RECLASS_BRANCH#" $(find nodes -name ${MASTER_HOSTNAME}.yml|tail -n1)
+
   mkdir -vp /srv/salt/reclass/nodes
-  [[ -f "/srv/salt/reclass/nodes/${MINION_ID}.yml" ]] || {
-  cat <<-EOF > /srv/salt/reclass/nodes/${MINION_ID}.yml
+  CONFIG=$(find /srv/salt/reclass/nodes -name ${MINION_ID}.yml|tail -n1)
+  CONFIG=${CONFIG:-/srv/salt/reclass/nodes/${MINION_ID}.yml}
+  [[ -f "${CONFIG}" ]] || {
+  cat <<-EOF > ${CONFIG}
 	classes:
 	- service.git.client
 	- system.linux.system.single
@@ -181,17 +186,17 @@ EOF
       VERSION="version: $SALT_VERSION"
     fi
 
-    cat <<-EOF >> /srv/salt/reclass/nodes/${MINION_ID}.yml
-		salt:
-		  master:
-		    accept_policy: open_mode
-		    source:
-		      engine: $SALT_SOURCE
-		      $VERSION
-		  minion:
-		    source:
-		      engine: $SALT_SOURCE
-		      $VERSION
+    cat <<-EOF >> ${CONFIG}
+		  salt:
+		    master:
+		      accept_policy: open_mode
+		      source:
+		        engine: $SALT_SOURCE
+		        $VERSION
+		    minion:
+		      source:
+		        engine: $SALT_SOURCE
+		        $VERSION
 EOF
   }
 }
